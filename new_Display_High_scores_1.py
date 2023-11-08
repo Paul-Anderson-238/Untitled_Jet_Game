@@ -71,7 +71,7 @@ def add_score(screen, clock, path, scoreboard, score):
     FLASHING = True
     TITLE_IN_PLACE = False
     frames = 0
-    SPEED = 8
+    SPEED = screen.get_width()/125
     target = WIDTH / 2
     congrats_text_box.left = screen.get_width()
     AOK = False
@@ -88,7 +88,6 @@ def add_score(screen, clock, path, scoreboard, score):
     while RUN_PROMPT:
         screen.fill("purple")
         screen.blit(background, (0,0))
-        
         if TITLE_IN_PLACE:
             prompt_text = font.render("Enter Initials: " + initials + prompt, False, WHITE) #update the text on screen
             if frames % 10 == 0:
@@ -130,12 +129,6 @@ def add_score(screen, clock, path, scoreboard, score):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return True, scoreboard, initials
-                # if (pygame.K_a <= event.key <= pygame.K_z):
-                #     char = chr(event.key - 32)
-                #     initials += char
-                # if (event.key == pygame.K_PERIOD) or event.key == pygame.K_SPACE:
-                #     char = chr(event.key)
-                #     initials += char
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     if AOK:
                         aok_i = (aok_i-1) % len(aok)
@@ -166,6 +159,25 @@ def add_score(screen, clock, path, scoreboard, score):
                             initials += characters[characters_i]
                             AOK = True
                         characters_i = 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if AOK:
+                    if aok[aok_i] == "Yes":
+                        RUN_PROMPT = False
+                    else:
+                        num_initials = 0
+                        initials = ""
+                        AOK = False
+                elif characters[characters_i] == "_" and initials != "":
+                    AOK = True
+                else:
+                    num_initials += 1
+                    if num_initials != 3:
+                        initials += characters[characters_i] + " "
+                    else:
+                        initials += characters[characters_i]
+                        AOK = True
+                    characters_i = 0
+        
         pygame.display.update()
         frames += 1
         clock.tick(30)
@@ -207,7 +219,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
         first = True
         i = 0
         new_texts = []
-        for text in texts:
+        for _ in texts:
             if first:
                 new_text = title_font.render("HIGHSCORES", False, WHITE)
                 new_rect = new_text.get_rect()
@@ -262,7 +274,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
     cent = screen.get_width()/2
     
     texts = []
-    highscore_text = title_font.render("HIGHSCORES", False, WHITE)
+    highscore_text = title_font.render("HIGHSCORES: " + difficulty, False, WHITE)
     highscore_text_box = highscore_text.get_rect()
     highscore_text_box.centerx = cent
     highscore_text_box.bottom = divs
@@ -302,15 +314,33 @@ def display_high_scores(screen, clock, new_score, difficulty):
     COLOR_LOOP = [WHITE, ORANGE]
     frames = 0
     RUN_HIGHSCORE = True
+
+    TITLE_IN_PLACE = False
+    SPEED = int(screen.get_width()/125)
+    target = screen.get_width()/2
+    highscore_text_box.left = screen.get_width()
+
+    delay_frames = 1000000000
+
     while RUN_HIGHSCORE and not QUIT:
-        #We want a slight flashing effect for their current attempt's high score
-        if frames % 15 == 0 and NEW_HIGHSCORE:
-            texts[new_score_i] = generate_text(new_score_i-1, COLOR_LOOP[color_i])
-            color_i = (color_i + 1)%len(COLOR_LOOP)
-        
+        screen.fill("purple")
         screen.blit(background, (0,0))
-        for text in texts:
-            screen.blit(text[0], text[1])
+        if not TITLE_IN_PLACE:
+            highscore_text_box.centerx -= SPEED
+            if highscore_text_box.centerx <= target:
+                highscore_text_box.centerx = target
+                TITLE_IN_PLACE = True
+                delay_frames = frames + 300
+            screen.blit(texts[0][0], texts[0][1])
+
+        if TITLE_IN_PLACE:
+            #We want a slight flashing effect for their current attempt's high score
+            if frames % 15 == 0 and NEW_HIGHSCORE:
+                texts[new_score_i] = generate_text(new_score_i-1, COLOR_LOOP[color_i])
+                color_i = (color_i + 1)%len(COLOR_LOOP)
+            
+            for text in texts:
+                screen.blit(text[0], text[1])
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -318,15 +348,20 @@ def display_high_scores(screen, clock, new_score, difficulty):
             if event.type == pygame.WINDOWRESIZED:
                 resize_high_scores()
             #Exit screen early at any key press
-            if event.type == pygame.KEYDOWN: 
-               RUN_HIGHSCORE = False
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                if not TITLE_IN_PLACE:
+                    highscore_text_box.centerx = target
+                    TITLE_IN_PLACE = True
+                    delay_frames = frames + 300 
+                else:
+                    RUN_HIGHSCORE = False
         
         frames += 1
         #At FPS of 15, we'll stay on this screen for 8 seconds before automatically cycling to the main menu
-        if frames == 120:
+        if delay_frames == frames:
             RUN_HIGHSCORE = False
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(30)
     ### End of Highscore display loop
     return QUIT
 
@@ -345,6 +380,6 @@ if __name__ == "__main__":
     scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clk = pygame.time.Clock()
     
-    display_high_scores(scrn, clk, 49000, "Normal")
+    display_high_scores(scrn, clk, 4000, "Normal")
     pygame.display.quit()
     
