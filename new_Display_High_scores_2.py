@@ -390,6 +390,6 @@ if __name__ == "__main__":
     scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clk = pygame.time.Clock()
     
-    display_high_scores(scrn, clk, 44000, "Normal")
+    display_high_scores(scrn, clk, 4000, "Normal")
     pygame.display.quit()
     
