@@ -46,21 +46,25 @@ def add_score(screen, clock, path, scoreboard, score):
     
     #Generate the text objects and position them
     WHITE = (255,255,255)
-    initials = "_ _ _"
+    initials = ""
     congrats_text = title_font.render("HIGHSCORE!!!", False, WHITE)
     congrats_text_box = congrats_text.get_rect()
     congrats_text_box.centerx = int(screen.get_width() / 2) 
     congrats_text_box.bottom = int(screen.get_height() / 3)
     #text.append(congrats_text, congrats_text_box)
-    prompt_text = font.render("Enter Name: " + initials, False, WHITE)
+    prompt_text = font.render("Enter Initials: _ _ _" + initials, False, WHITE)
     prompt_text_box = prompt_text.get_rect()
     anchor = congrats_text_box.midbottom
     anchor = (anchor[0], anchor[1]+20)
     prompt_text_box.midtop = anchor
 
-    congrats_text = title_font.render("HIGHSCORE!!!", False, WHITE)
-
     WIDTH = screen.get_width()
+    characters = ["_", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+                  "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    characters_i = 0
+    characters_len = len(characters) 
+    prompt = " " + characters[0]
+    num_initials = 0
 
     #some variables for visual effects
     RUN_PROMPT = True
@@ -70,6 +74,15 @@ def add_score(screen, clock, path, scoreboard, score):
     SPEED = 8
     target = WIDTH / 2
     congrats_text_box.left = screen.get_width()
+    AOK = False
+    aok_i = 0
+    aok = ["Yes", "No"]
+
+    confirm_text = font.render("Are These initials Okay? YES" + aok[aok_i], False, WHITE)
+    confirm_text_box = confirm_text.get_rect()
+    anchor = prompt_text_box.midbottom
+    anchor = (anchor[0], anchor[1]+20)
+    confirm_text_box.midtop = anchor
 
     #Loop to display text to the screen
     while RUN_PROMPT:
@@ -77,11 +90,25 @@ def add_score(screen, clock, path, scoreboard, score):
         screen.blit(background, (0,0))
         
         if TITLE_IN_PLACE:
-            prompt_text = font.render("Enter Name: " + initials, False, WHITE) #update the text on screen
-            if frames % 25 == 0:
+            prompt_text = font.render("Enter Initials: " + initials + prompt, False, WHITE) #update the text on screen
+            if frames % 10 == 0:
                 FLASHING = not FLASHING
             if FLASHING:
-                screen.blit(congrats_text, congrats_text_box)
+                aok_prompt = ""
+                prompt = ""
+            else:
+                if AOK:
+                    aok_prompt = " " + aok[aok_i]
+                else:
+                    prompt = " " + characters[characters_i]
+
+            if AOK:
+                anchor = prompt_text_box.midbottom
+                anchor = (anchor[0], anchor[1]+20)
+                confirm_text_box.midtop = anchor
+                confirm_text = font.render("Are These Initials Okay? " + aok_prompt, False, WHITE)
+                screen.blit(confirm_text, confirm_text_box)
+            screen.blit(congrats_text, congrats_text_box)
             screen.blit(prompt_text, prompt_text_box)
         else:
             congrats_text_box.centerx = congrats_text_box.centerx - SPEED
@@ -103,17 +130,42 @@ def add_score(screen, clock, path, scoreboard, score):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return True, scoreboard, initials
-                if (pygame.K_a <= event.key <= pygame.K_z):
-                    char = chr(event.key - 32)
-                    initials += char
-                if (event.key == pygame.K_PERIOD) or event.key == pygame.K_SPACE:
-                    char = chr(event.key)
-                    initials += char
+                # if (pygame.K_a <= event.key <= pygame.K_z):
+                #     char = chr(event.key - 32)
+                #     initials += char
+                # if (event.key == pygame.K_PERIOD) or event.key == pygame.K_SPACE:
+                #     char = chr(event.key)
+                #     initials += char
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    if AOK:
+                        aok_i = (aok_i-1) % len(aok)
+                    else:
+                        characters_i = (characters_i-1) % characters_len
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    if AOK:
+                        aok_i = (aok_i+1) % len(aok)
+                    else:
+                        characters_i = (characters_i+1) % characters_len
                 if event.key == pygame.K_BACKSPACE:
-                    initials = initials[:-1]
+                    initials = initials[:-2]
                 if event.key == pygame.K_RETURN:
-                    if initials != "":
-                        RUN_PROMPT = False
+                    if AOK:
+                        if aok[aok_i] == "Yes":
+                            RUN_PROMPT = False
+                        else:
+                            num_initials = 0
+                            initials = ""
+                            AOK = False
+                    elif characters[characters_i] == "_" and initials != "":
+                        AOK = True
+                    else:
+                        num_initials += 1
+                        if num_initials != 3:
+                            initials += characters[characters_i] + " "
+                        else:
+                            initials += characters[characters_i]
+                            AOK = True
+                        characters_i = 0
         pygame.display.update()
         frames += 1
         clock.tick(30)
