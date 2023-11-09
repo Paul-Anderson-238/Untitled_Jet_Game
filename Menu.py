@@ -32,7 +32,10 @@ def menu(screen, clock):
     
     
     RUN_MENU = True
-    
+
+    delay_frames = 300
+    frames = 0
+
     while RUN_MENU:
         screen.fill("purple")
         screen.blit(background, (0,0))
@@ -69,25 +72,49 @@ def menu(screen, clock):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    delay_frames = frames + 300
                     DIFF_KEY = (DIFF_KEY+1) % len(difficulties)
-                if event.key == pygame.K_w or event.key == pygame.K_UP:                
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
+                    delay_frames = frames + 300                
                     DIFF_KEY = (DIFF_KEY-1) % len(difficulties)
                 if event.key == pygame.K_ESCAPE:
                     RUN_MENU = False
                     pygame.display.quit()
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    delay_frames = frames + 300
                     end_game, score = run_game(screen, clock, difficulties[DIFF_KEY])
                     if end_game:
                         RUN_MENU = False
                         pygame.display.quit()
                     else:
-                        end_game = display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
+                        import new_Display_High_scores_2
+                        end_game = new_Display_High_scores_2.display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
+                        
+                        #Re-scale font and screen sizes in case one of the other states changed the size
                         title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
                         font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
                         background = pygame.transform.smoothscale(background, screen.get_size())
                     if end_game:
                         RUN_MENU = False
                         pygame.display.quit()
+            else:
+                delay_frames = frames + 300
+        
+        if delay_frames <= frames:
+            end = False
+            import new_Display_High_scores_2
+            import new_Display_High_scores_1
+            for difficulty in difficulties:
+                end = new_Display_High_scores_1.display_high_scores(screen, clock, 0, difficulty)
+                if end:
+                    break
+            for difficulty in difficulties:
+                end = new_Display_High_scores_2.display_high_scores(screen, clock, 0, difficulty)
+                if end:
+                    break
+            delay_frames = frames + 300
+
+        frames += 1
         clock.tick(30)
 
 if __name__ == "__main__":

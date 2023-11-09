@@ -336,6 +336,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
             if alpha >= 255:
                 alpha = 255
                 ready = True
+                delay_frames = frames + 150
             for text in texts:
                 text[0].set_alpha(alpha)
 
@@ -359,6 +360,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
             #Exit screen early at any key press
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 if not ready:
+                    delay_frames = frames + 150
                     alpha = 255
                     ready = True
                     for text in texts:
@@ -390,6 +392,6 @@ if __name__ == "__main__":
     scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clk = pygame.time.Clock()
     
-    display_high_scores(scrn, clk, 4000, "Normal")
+    display_high_scores(scrn, clk, 54000, "Normal")
     pygame.display.quit()
     
