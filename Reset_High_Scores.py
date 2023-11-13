@@ -17,11 +17,11 @@ def reset_high_scores():
     high_score_tables = {"Easy": "./high_scores/Easy_high_scores.json",
                          "Normal": "./high_scores/Normal_high_scores.json",
                          "Hard": "./high_scores/Hard_high_scores.json"}
-    highscores = [("A. EARHART", 40000),
-                  ("R. BARON", 35000),
-                  ("C. LINDBERGH", 30000),
-                  ("O. WRIGHT", 25000),
-                  ("MAVERICK", 20000)]
+    highscores = [("A A A", 500),
+                  ("B B B", 400),
+                  ("C C C", 300),
+                  ("D D D", 200),
+                  ("E E E", 100)]
 
 
     json_highscores = json.dumps(highscores, indent=4)
