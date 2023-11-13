@@ -137,7 +137,8 @@ def display_high_scores(screen, clock, new_score, difficulty):
             i += 1
         texts = new_texts
     
-    high_score_tables = {"Normal": "./high_scores/Normal_high_scores.json",
+    high_score_tables = {"Easy": "./high_scores/Easy_high_scores.json",
+                         "Normal": "./high_scores/Normal_high_scores.json",
                          "Hard": "./high_scores/Hard_high_scores.json"} 
     
     with open(high_score_tables[difficulty], "r") as openfile:

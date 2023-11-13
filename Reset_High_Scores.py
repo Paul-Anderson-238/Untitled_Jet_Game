@@ -14,7 +14,8 @@ import json
 #################################################################################################
 
 def reset_high_scores():
-    high_score_tables = {"Normal": "./high_scores/Normal_high_scores.json",
+    high_score_tables = {"Easy": "./high_scores/Easy_high_scores.json",
+                         "Normal": "./high_scores/Normal_high_scores.json",
                          "Hard": "./high_scores/Hard_high_scores.json"}
     highscores = [("A. EARHART", 40000),
                   ("R. BARON", 35000),

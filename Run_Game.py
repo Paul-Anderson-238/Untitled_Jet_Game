@@ -53,8 +53,9 @@ def run_game(screen, clock, difficulty):
     #   Initialization of variables for running game. all adjustments to the numbers of the game 
     #   should be made in this section.
     ################################################################################################
-    levels = {"Normal": [0.2, 0.5, 0.085, 0.175, 0.025], #GAP_MIN, GAP_MAX, DISTANCE_MIN, DISTANCE_MAX, MULTILIER_GROWTH_RATE
-              "Hard": [0.2, 0.4, 0.1, 0.22, 0.035]}
+    levels = {"Easy": [0.25, 0.5, 0.1, 0.175, 0.015], #GAP_MIN, GAP_MAX, DISTANCE_MIN, DISTANCE_MAX, MULTILIER_GROWTH_RATE
+              "Normal": [0.2, 0.5, 0.1, 0.2, 0.025],
+              "Hard": [0.2, 0.4, 0.1, 0.225, 0.035]}
     
     PLAYER_SPEED = screen.get_height() / 75    #How Quickly the Player can move up and down
     OBJECT_SPEED = screen.get_width() / 65     #How Quickly the Background Scrolls and how fast obstacles move
@@ -337,6 +338,6 @@ if __name__ == "__main__":
 
     scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clk = pygame.time.Clock()
-    run_game(scrn, clk, "Normal")
+    run_game(scrn, clk, "Easy")
     pygame.display.quit()
   

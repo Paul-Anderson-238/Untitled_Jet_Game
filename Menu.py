@@ -17,7 +17,7 @@ def menu(screen, clock):
         font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
         background = pygame.transform.smoothscale(background, screen.get_size())
     
-    difficulties = ["Normal", "Hard"] #Acceptable Difficulty Settings
+    difficulties = ["Easy", "Normal", "Hard"] #Acceptable Difficulty Settings
     DIFF_KEY = 0                      #Tracks which difficulty the player is currently selecting
     
     background = pygame.image.load("./img/background_cave_blue.png").convert()
@@ -63,6 +63,7 @@ def menu(screen, clock):
         
         pygame.display.update()
         for event in pygame.event.get():
+            delay_frames = frames + 300
             if event.type == pygame.QUIT:
                 RUN_MENU = False
                 pygame.display.quit()
@@ -72,16 +73,13 @@ def menu(screen, clock):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                    delay_frames = frames + 300
                     DIFF_KEY = (DIFF_KEY+1) % len(difficulties)
-                if event.key == pygame.K_w or event.key == pygame.K_UP:
-                    delay_frames = frames + 300                
+                if event.key == pygame.K_w or event.key == pygame.K_UP:  
                     DIFF_KEY = (DIFF_KEY-1) % len(difficulties)
                 if event.key == pygame.K_ESCAPE:
                     RUN_MENU = False
                     pygame.display.quit()
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                    delay_frames = frames + 300
                     end_game, score = run_game(screen, clock, difficulties[DIFF_KEY])
                     if end_game:
                         RUN_MENU = False
@@ -97,8 +95,6 @@ def menu(screen, clock):
                     if end_game:
                         RUN_MENU = False
                         pygame.display.quit()
-            else:
-                delay_frames = frames + 300
         
         if delay_frames <= frames:
             end = False
