@@ -71,6 +71,23 @@ def menu(screen, clock):
             if event.type == pygame.WINDOWRESIZED:
                 resize_window()
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                end_game, score = run_game(screen, clock, difficulties[DIFF_KEY])
+                if end_game:
+                    RUN_MENU = False
+                    pygame.display.quit()
+                else:
+                    import new_Display_High_scores_2
+                    end_game = new_Display_High_scores_2.display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
+                    
+                    #Re-scale font and screen sizes in case one of the other states changed the size
+                    title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
+                    font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
+                    background = pygame.transform.smoothscale(background, screen.get_size())
+                if end_game:
+                    RUN_MENU = False
+                    pygame.display.quit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     DIFF_KEY = (DIFF_KEY+1) % len(difficulties)
