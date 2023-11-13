@@ -9,6 +9,7 @@ import screeninfo
 import pygame
 from Run_Game import run_game
 from Display_High_Scores import display_high_scores
+from High_Scores_Idle import high_scores_idle
 
 def menu(screen, clock):
     def resize_window():
@@ -18,7 +19,7 @@ def menu(screen, clock):
         background = pygame.transform.smoothscale(background, screen.get_size())
     
     difficulties = ["Easy", "Normal", "Hard"] #Acceptable Difficulty Settings
-    DIFF_KEY = 0                      #Tracks which difficulty the player is currently selecting
+    DIFF_KEY = 1                      #Tracks which difficulty the player is currently selecting
     
     background = pygame.image.load("./img/background_cave_blue.png").convert()
     background = pygame.transform.smoothscale(background, screen.get_size())
@@ -77,9 +78,7 @@ def menu(screen, clock):
                     RUN_MENU = False
                     pygame.display.quit()
                 else:
-                    import new_Display_High_scores_2
-                    end_game = new_Display_High_scores_2.display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
-                    
+                    end_game = display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
                     #Re-scale font and screen sizes in case one of the other states changed the size
                     title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
                     font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
@@ -102,9 +101,7 @@ def menu(screen, clock):
                         RUN_MENU = False
                         pygame.display.quit()
                     else:
-                        import new_Display_High_scores_2
-                        end_game = new_Display_High_scores_2.display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
-                        
+                        end_game = display_high_scores(screen, clock, score, difficulties[DIFF_KEY])
                         #Re-scale font and screen sizes in case one of the other states changed the size
                         title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
                         font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
@@ -113,18 +110,12 @@ def menu(screen, clock):
                         RUN_MENU = False
                         pygame.display.quit()
         
+        #delay_frames is a mark to track if no activity has been detected in 10 seconds
         if delay_frames <= frames:
-            end = False
-            import new_Display_High_scores_2
-            import new_Display_High_scores_1
-            for difficulty in difficulties:
-                end = new_Display_High_scores_1.display_high_scores(screen, clock, 0, difficulty)
-                if end:
-                    break
-            for difficulty in difficulties:
-                end = new_Display_High_scores_2.display_high_scores(screen, clock, 0, difficulty)
-                if end:
-                    break
+            #returns False unless player opted to close the game.
+            if high_scores_idle(screen, clock):
+                RUN_MENU = False
+                pygame.display.quit()
             delay_frames = frames + 300
 
         frames += 1

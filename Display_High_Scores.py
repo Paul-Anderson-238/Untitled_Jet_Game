@@ -42,54 +42,155 @@ def add_score(screen, clock, path, scoreboard, score):
     
     #Generate the text objects and position them
     WHITE = (255,255,255)
-    name = ""
+    initials = ""
     congrats_text = title_font.render("HIGHSCORE!!!", False, WHITE)
     congrats_text_box = congrats_text.get_rect()
     congrats_text_box.centerx = int(screen.get_width() / 2) 
     congrats_text_box.bottom = int(screen.get_height() / 3)
     #text.append(congrats_text, congrats_text_box)
-    prompt_text = font.render("Enter Name: " + name, False, WHITE)
+    prompt_text = font.render("Enter Initials: _ _ _" + initials, False, WHITE)
     prompt_text_box = prompt_text.get_rect()
     anchor = congrats_text_box.midbottom
     anchor = (anchor[0], anchor[1]+20)
     prompt_text_box.midtop = anchor
 
-    #Loop to display text to the screen
+    WIDTH = screen.get_width()
+    characters = ["_", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+                  "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    characters_i = 0
+    characters_len = len(characters) 
+    prompt = " " + characters[0]
+    num_initials = 0
+
+    #some variables for visual effects
     RUN_PROMPT = True
+    FLASHING = True
+    frames = 0
+    AOK = False
+    aok_i = 0
+    aok = ["Yes", "No"]
+
+    confirm_text = font.render("Are These initials Okay? YES" + aok[aok_i], False, WHITE)
+    confirm_text_box = confirm_text.get_rect()
+    anchor = prompt_text_box.midbottom
+    anchor = (anchor[0], anchor[1]+20)
+    confirm_text_box.midtop = anchor
+
+    congrats_text.set_alpha(0)
+    prompt_text.set_alpha(0)
+
+    ready = False
+    alpha = 0
+
+    #Loop to display text to the screen
     while RUN_PROMPT:
         screen.fill("purple")
-        congrats_text = title_font.render("HIGHSCORE!!!", False, WHITE)
-        prompt_text = font.render("Enter Name: " + name, False, WHITE) #update the text on screen
         screen.blit(background, (0,0))
+        if not ready:
+            alpha += 3
+            if alpha >= 255:
+                ready = True
+                prompt_text.set_alpha(alpha)
+            congrats_text.set_alpha(alpha)
+        else:
+            prompt_text = font.render("Enter Initials: " + initials + prompt, False, WHITE) #update the text on screen
+            if frames % 10 == 0:
+                FLASHING = not FLASHING
+            if FLASHING:
+                aok_prompt = ""
+                prompt = ""
+            else:
+                if AOK:
+                    aok_prompt = " " + aok[aok_i]
+                else:
+                    prompt = " " + characters[characters_i]
+
+            if AOK:
+                anchor = prompt_text_box.midbottom
+                anchor = (anchor[0], anchor[1]+20)
+                confirm_text_box.midtop = anchor
+                confirm_text = font.render("Are These Initials Okay? " + aok_prompt, False, WHITE)
+                screen.blit(confirm_text, confirm_text_box)
         screen.blit(congrats_text, congrats_text_box)
         screen.blit(prompt_text, prompt_text_box)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 RUN_PROMPT = False
-                return True, scoreboard, name
+                return True, scoreboard, initials
             if event.type == pygame.WINDOWRESIZED:
                 resize_score()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    return True, scoreboard, name
-                if (pygame.K_a <= event.key <= pygame.K_z):
-                    char = chr(event.key - 32)
-                    name += char
-                if (event.key == pygame.K_PERIOD) or event.key == pygame.K_SPACE:
-                    char = chr(event.key)
-                    name += char
-                if event.key == pygame.K_BACKSPACE:
-                    name = name[:-1]
-                if event.key == pygame.K_RETURN:
-                    if name != "":
-                        RUN_PROMPT = False
+                if not ready:
+                    alpha = 255
+                    congrats_text.set_alpha(alpha)
+                    prompt_text.set_alpha(alpha)
+                    ready = True
+                else:
+                    if event.key == pygame.K_ESCAPE:
+                        return True, scoreboard, initials
+                    if event.key == pygame.K_UP or event.key == pygame.K_w:
+                        if AOK:
+                            aok_i = (aok_i-1) % len(aok)
+                        else:
+                            characters_i = (characters_i-1) % characters_len
+                    if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                        if AOK:
+                            aok_i = (aok_i+1) % len(aok)
+                        else:
+                            characters_i = (characters_i+1) % characters_len
+                    if event.key == pygame.K_BACKSPACE:
+                        initials = initials[:-2]
+                    if event.key == pygame.K_RETURN:
+                        if AOK:
+                            if aok[aok_i] == "Yes":
+                                RUN_PROMPT = False
+                            else:
+                                num_initials = 0
+                                initials = ""
+                                AOK = False
+                        elif characters[characters_i] == "_" and initials != "":
+                            AOK = True
+                        else:
+                            num_initials += 1
+                            if num_initials != 3:
+                                initials += characters[characters_i] + " "
+                            else:
+                                initials += characters[characters_i]
+                                AOK = True
+                            characters_i = 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if not ready:
+                    alpha = 255
+                    ready = True
+                    prompt_text.set_alpha(alpha)
+                    congrats_text.set_alpha(alpha)
+                else:
+                    if AOK:
+                        if aok[aok_i] == "Yes":
+                            RUN_PROMPT = False
+                        else:
+                            num_initials = 0
+                            initials = ""
+                            AOK = False
+                    elif characters[characters_i] == "_" and initials != "":
+                        AOK = True
+                    else:
+                        num_initials += 1
+                        if num_initials != 3:
+                            initials += characters[characters_i] + " "
+                        else:
+                            initials += characters[characters_i]
+                            AOK = True
+                        characters_i = 0
+    
         pygame.display.update()
-        clock.tick(15)
+        frames += 1
+        clock.tick(30)
     ### End of Loop 
  
     #Update the scoreboard
-    scoreboard += [[name, score]]
+    scoreboard += [[initials, score]]
     scoreboard = sorted(scoreboard, key=lambda score: score[1], reverse=True)
     del(scoreboard[len(scoreboard)-1])
     
@@ -97,7 +198,7 @@ def add_score(screen, clock, path, scoreboard, score):
     json_highscores = json.dumps(scoreboard, indent=4)
     with open(path, "w") as outfile:
         outfile.write(json_highscores)
-    return False, scoreboard, name
+    return False, scoreboard, initials
 
 ############################################################################################################
 #The function called from main to display the high scores
@@ -124,7 +225,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
         first = True
         i = 0
         new_texts = []
-        for text in texts:
+        for _ in texts:
             if first:
                 new_text = title_font.render("HIGHSCORES", False, WHITE)
                 new_rect = new_text.get_rect()
@@ -180,7 +281,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
     cent = screen.get_width()/2
     
     texts = []
-    highscore_text = title_font.render("HIGHSCORES", False, WHITE)
+    highscore_text = title_font.render("HIGHSCORES: " + difficulty, False, WHITE)
     highscore_text_box = highscore_text.get_rect()
     highscore_text_box.centerx = cent
     highscore_text_box.bottom = divs
@@ -220,15 +321,37 @@ def display_high_scores(screen, clock, new_score, difficulty):
     COLOR_LOOP = [WHITE, ORANGE]
     frames = 0
     RUN_HIGHSCORE = True
+
+    delay_frames = 1000000000
+
+    ready = False
+    alpha = 0
+    for text in texts:
+        text[0].set_alpha(alpha)
+
     while RUN_HIGHSCORE and not QUIT:
-        #We want a slight flashing effect for their current attempt's high score
-        if frames % 15 == 0 and NEW_HIGHSCORE:
-            texts[new_score_i] = generate_text(new_score_i-1, COLOR_LOOP[color_i])
-            color_i = (color_i + 1)%len(COLOR_LOOP)
-        
+        screen.fill("purple")
         screen.blit(background, (0,0))
+        if not ready:
+            alpha += 3
+            if alpha >= 255:
+                alpha = 255
+                ready = True
+                delay_frames = frames + 150
+            for text in texts:
+                text[0].set_alpha(alpha)
+
         for text in texts:
             screen.blit(text[0], text[1])
+
+        if ready:
+            #We want a slight flashing effect for their current attempt's high score
+            if frames % 15 == 0 and NEW_HIGHSCORE:
+                texts[new_score_i] = generate_text(new_score_i-1, COLOR_LOOP[color_i])
+                color_i = (color_i + 1)%len(COLOR_LOOP)
+            
+            for text in texts:
+                screen.blit(text[0], text[1])
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -236,15 +359,22 @@ def display_high_scores(screen, clock, new_score, difficulty):
             if event.type == pygame.WINDOWRESIZED:
                 resize_high_scores()
             #Exit screen early at any key press
-            if event.type == pygame.KEYDOWN: 
-               RUN_HIGHSCORE = False
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                if not ready:
+                    delay_frames = frames + 150
+                    alpha = 255
+                    ready = True
+                    for text in texts:
+                        text[0].set_alpha(alpha) 
+                else:
+                    RUN_HIGHSCORE = False
         
         frames += 1
         #At FPS of 15, we'll stay on this screen for 8 seconds before automatically cycling to the main menu
-        if frames == 120:
+        if delay_frames == frames:
             RUN_HIGHSCORE = False
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(30)
     ### End of Highscore display loop
     return QUIT
 
@@ -263,6 +393,6 @@ if __name__ == "__main__":
     scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clk = pygame.time.Clock()
     
-    display_high_scores(scrn, clk, 49000, "Normal")
+    display_high_scores(scrn, clk, 100, "Normal")
     pygame.display.quit()
     
