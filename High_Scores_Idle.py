@@ -124,7 +124,7 @@ def high_scores_idle(screen, clock):
             if alpha >= 255:
                 alpha = 255
                 ready = True
-                delay_frames = frames + 150
+                delay_frames = frames + 300
             for text in texts:
                 text[0].set_alpha(alpha)
 

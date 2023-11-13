@@ -87,7 +87,7 @@ def add_score(screen, clock, path, scoreboard, score):
         screen.fill("purple")
         screen.blit(background, (0,0))
         if not ready:
-            alpha += 3
+            alpha += 5
             if alpha >= 255:
                 ready = True
                 prompt_text.set_alpha(alpha)
@@ -333,11 +333,11 @@ def display_high_scores(screen, clock, new_score, difficulty):
         screen.fill("purple")
         screen.blit(background, (0,0))
         if not ready:
-            alpha += 3
+            alpha += 5
             if alpha >= 255:
                 alpha = 255
                 ready = True
-                delay_frames = frames + 150
+                delay_frames = frames + 240
             for text in texts:
                 text[0].set_alpha(alpha)
 
@@ -361,7 +361,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
             #Exit screen early at any key press
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 if not ready:
-                    delay_frames = frames + 150
+                    delay_frames = frames + 240
                     alpha = 255
                     ready = True
                     for text in texts:

@@ -118,6 +118,12 @@ def menu(screen, clock):
                 pygame.display.quit()
             delay_frames = frames + 300
 
+        #some logic so the frames number doesn't get too big. keep the math simple
+        if frames >= 100000:
+            diff = delay_frames - frames
+            frames = 0
+            delay_frames = diff
+
         frames += 1
         clock.tick(30)
 
