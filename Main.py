@@ -20,7 +20,7 @@ if __name__ == "__main__":
     for m in screeninfo.get_monitors():
         if m.is_primary:
             monitor = m
-    INITIAL_SIZE = (int(monitor.width * 0.8), int(monitor.height * 0.8)) #Initial Screen size
+    INITIAL_SIZE = (int(monitor.width* 0.8), int(monitor.height * 0.8)) #Initial Screen size
     screen = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clock = pygame.time.Clock()
     pygame.display.set_caption("Untitled Jet Game")

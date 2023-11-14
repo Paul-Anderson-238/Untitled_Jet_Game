@@ -10,6 +10,7 @@ import pygame
 from Run_Game import run_game
 from Display_High_Scores import display_high_scores
 from High_Scores_Idle import high_scores_idle
+from Demo_Mode import demo_mode
 
 def menu(screen, clock):
     def resize_window():
@@ -112,11 +113,19 @@ def menu(screen, clock):
         
         #delay_frames is a mark to track if no activity has been detected in 10 seconds
         if delay_frames <= frames:
-            #returns False unless player opted to close the game.
-            if high_scores_idle(screen, clock):
+            AWAKE, QUIT = demo_mode(screen, clock, screen.get_width(), screen.get_height())
+            if QUIT:
                 RUN_MENU = False
                 pygame.display.quit()
+            #returns False unless player opted to close the game.
+            elif not AWAKE:
+                if high_scores_idle(screen, clock):
+                    RUN_MENU = False
+                    pygame.display.quit()
             delay_frames = frames + 300
+            title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
+            font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
+            background = pygame.transform.smoothscale(background, screen.get_size())
 
         #some logic so the frames number doesn't get too big. keep the math simple
         if frames >= 100000:
