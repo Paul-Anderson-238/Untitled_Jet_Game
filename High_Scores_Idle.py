@@ -19,30 +19,31 @@ import pygame
 ############################################################################################################
 def high_scores_idle(screen, clock):  
     def resize_high_scores():
-        nonlocal y_divs, x_divs, font, title_font, background, highscore_text_box, texts
+        nonlocal y_divs, x_divs, font, title_font, background, highscore_text_box, texts, highscores
         y_divs = screen.get_height()/8
         x_divs= screen.get_width()/4
         title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
         font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
         background = pygame.transform.smoothscale(background, screen.get_size())
         
-        # highscore_text_box.centerx = cent
-        # highscore_text_box.bottom = divs
-        # first = True
-        # i = 0
-        # new_texts = []
-        # for _ in texts:
-        #     if first:
-        #         new_text = title_font.render("HIGHSCORES", False, WHITE)
-        #         new_rect = new_text.get_rect()
-        #         new_rect.centerx = cent
-        #         new_rect.bottom = divs
-        #         new_texts.append((new_text, new_rect))
-        #         first = False
-        #         continue
-        #     new_texts.append(generate_text(i,WHITE))
-        #     i += 1
-        # texts = new_texts
+        texts = []
+
+        highscore_text = title_font.render("HIGHSCORES", False, WHITE)
+        highscore_text_box = highscore_text.get_rect()
+        highscore_text_box.centerx = screen.get_width()/2
+        highscore_text_box.bottom = y_divs
+        texts.append((highscore_text, highscore_text_box))
+
+        for i in range(len(highscores)):
+            title = title_font.render(highscores[i][0], False, WHITE)
+            title_box = title.get_rect()
+            title_box.centerx = (x_divs * (i+1))
+            title_box.bottom = y_divs * 2
+            texts.append((title, title_box))
+            for j in range(len(highscores[i][1])):
+                texts.append(generate_score_text((x_divs * (i+1)), (y_divs * (j + 3)), highscores[i][1][j], WHITE))
+    
+
     
     high_score_tables = {"Easy": "./high_scores/Easy_high_scores.json",
                          "Normal": "./high_scores/Normal_high_scores.json",
@@ -89,7 +90,7 @@ def high_scores_idle(screen, clock):
     texts.append((highscore_text, highscore_text_box))
     
     highscores = []
-    
+
     for key in high_score_tables.keys():
         with open(high_score_tables[key], "r") as openfile:
             highscore = json.load(openfile)
