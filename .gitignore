@@ -2,3 +2,4 @@
 /.vscode/
 /high_scores/*.json
 /test.py
+^/high_scores/
