@@ -29,7 +29,7 @@ def demo_mode(screen, clock, WIDTH, HEIGHT):
 
     video = cv2.VideoCapture(video_file_file + choice(paths))
     success, video_image = video.read()
-    fps = video.get(cv2.CAP_PROP_FPS)
+    fps = 30
 
     QUIT = False
     AWAKE = False
