@@ -2,8 +2,8 @@
 ## Menu.py: Creates the menu and decides which game state to enter
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Status: Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Status: Effects for high scores updated, idle behavior implemented
 ########################################################
 import screeninfo
 import pygame
@@ -13,6 +13,12 @@ from High_Scores_Idle import high_scores_idle
 from Demo_Mode import demo_mode
 
 def menu(screen, clock):
+    ############################################################################################################
+    #A function to control the resizing logic should the player resize the window. Resizes all elements that 
+    #appear on the screen according to ratios that have already been calculated.
+    #	inputs:
+    #	outputs:
+    ############################################################################################################
     def resize_window():
         nonlocal title_font, font, background
         title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
@@ -136,6 +142,10 @@ def menu(screen, clock):
         frames += 1
         clock.tick(30)
 
+#################################################################################################
+# Running this file as a script: If running this file as a script, it will test the function with 
+#                                test values. Feel free to tweak and test from here. 
+#################################################################################################
 if __name__ == "__main__":
     for m in screeninfo.get_monitors():
         if m.is_primary:

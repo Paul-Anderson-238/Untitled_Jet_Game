@@ -2,15 +2,21 @@
 ## Collision.py: Functions for detecting collision in game
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Status: Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Status: Effects for high scores updated, idle behavior implemented
 ########################################################
 
 import pygame
-####################################################################################################
-#    This is a helper function to detect collision between 2 line segments. This will detect if the
-#    player object collides with the polygons that make up the top and bottom borders.
-####################################################################################################
+############################################################################################################
+#A helper function that will detect if there's a collision between 2 lines
+#	inputs:
+#		l1_p1: point 1 of line 1
+#		l1_p2: point 2 of line 1
+#		l2_p1: point 1 of line 2
+#		l2_p2: point 2 of line 2
+#	outputs:
+#		COLLISION: boolean value indicating whether or not there was a collision
+############################################################################################################
 def collideLineLine(l1_p1, l1_p2, l2_p1, l2_p2):
     #normalized direction of the lines and start of the lines
     P = pygame.math.Vector2(*l1_p1)
@@ -34,18 +40,29 @@ def collideLineLine(l1_p1, l1_p2, l2_p1, l2_p2):
     
     return t > 0 and u > 0 and t*t < line1_vec.magnitude_squared() and u*u < line2_vec.magnitude_squared()
 
-####################################################################################################
-#   Uses the above Line collision function to see if a line intersects with a given rectangle.
-####################################################################################################
+############################################################################################################
+#A helper function that will detect if there's a collision between a line and a rectangle
+#	inputs:
+#		rect: a pygame rectangle object consisting of 4 points
+#       p1: point 1 of the line we are checking collision on
+#       p2: point 2 of the line we are checking collision on
+#	outputs:
+#		COLLISION: boolean value indicating whether or not there was a collision
+############################################################################################################
 def collide_rect_line(rect, p1, p2):
     return (collideLineLine(p1, p2, rect.topleft, rect.bottomleft) or
            collideLineLine(p1, p2, rect.bottomleft, rect.bottomright) or
            collideLineLine(p1, p2, rect.bottomright, rect.topright) or
            collideLineLine(p1, p2, rect.topright, rect.topleft))
 
-####################################################################################################
-#   Uses the above 2 functions to detect a collision between the player rectangle and the border polygons
-####################################################################################################
+############################################################################################################
+#Our final function that checks for collision between a polygon and a rectangle
+#	inputs:
+#		rect: a pygame rectangle object consisting of 4 points
+#       poly: a series of points that define a polygon
+#	outputs:
+#		COLLISION: boolean value indicating whether or not there was a collision
+############################################################################################################
 def collide_rect_polygon(rect, poly):
     for i in range(len(poly)-1):
         if collide_rect_line(rect, poly[i], poly[i+1]):

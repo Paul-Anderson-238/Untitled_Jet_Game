@@ -2,14 +2,13 @@
 ## Display_High_Scores.py: Controls the High Score game state
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Effects for high scores updated, idle behavior implemented
 ########################################################
 
 import json
 import pygame
-
-############################################################################################################
+################################################################################################################
 #A helper function that will update the scoreboard both in the storage json file and locally
 #	inputs:
 #		screen: the screen object to display to.
@@ -19,9 +18,14 @@ import pygame
 #		score: the new score to add to the list.
 #	outputs:
 #		scoreboard: the updated list of high scores
-############################################################################################################
+################################################################################################################
 def add_score(screen, clock, path, scoreboard, score):
-
+    ############################################################################################################
+    #A function to control the resizing logic should the player resize the window. Resizes all elements that 
+    #appear on the screen according to ratios that have already been calculated.
+    #	inputs:
+    #	outputs:
+    ############################################################################################################
     def resize_score():
         nonlocal background, title_font, font, congrats_text_box, prompt_text_box
         title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
@@ -33,6 +37,7 @@ def add_score(screen, clock, path, scoreboard, score):
         anchor = (anchor[0], anchor[1]+20)
         prompt_text_box.midtop = anchor
 
+    ########## Start of Display function ########################################################### 
     background = pygame.image.load("./img/background_cave_blue.png").convert()
     background = pygame.transform.smoothscale(background, screen.get_size())
     
@@ -40,21 +45,21 @@ def add_score(screen, clock, path, scoreboard, score):
     title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/16))
     font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
     
-    #Generate the text objects and position them
     WHITE = (255,255,255)
     initials = ""
+
+    #Generate the text objects and position them
     congrats_text = title_font.render("HIGHSCORE!!!", False, WHITE)
     congrats_text_box = congrats_text.get_rect()
-    congrats_text_box.centerx = int(screen.get_width() / 2) 
-    congrats_text_box.bottom = int(screen.get_height() / 3)
-    #text.append(congrats_text, congrats_text_box)
-    prompt_text = font.render("Enter Initials: _ _ _" + initials, False, WHITE)
+    congrats_text_box.centerx = int(screen.get_width() / 2) # Centered on the screen 
+    congrats_text_box.bottom = int(screen.get_height() / 3) # A third of the way down from the top of the screen
+    prompt_text = font.render("Enter Initials: _ _ _" + initials, False, WHITE) #initialized wide enough for 3 initials entered
     prompt_text_box = prompt_text.get_rect()
     anchor = congrats_text_box.midbottom
-    anchor = (anchor[0], anchor[1]+20)
+    anchor = (anchor[0], anchor[1]+20) #20 pixels down from the HIGHSCORE!!! banner above it.
     prompt_text_box.midtop = anchor
 
-    WIDTH = screen.get_width()
+    # A list of the characters the player can enter. Underscore will represent end of entry. For simplicity, only CAPS letters allowed
     characters = ["_", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                   "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
     characters_i = 0
@@ -70,7 +75,7 @@ def add_score(screen, clock, path, scoreboard, score):
     aok_i = 0
     aok = ["Yes", "No"]
 
-    confirm_text = font.render("Are These initials Okay? YES" + aok[aok_i], False, WHITE)
+    confirm_text = font.render("Are These initials Okay? " + aok[aok_i], False, WHITE)
     confirm_text_box = confirm_text.get_rect()
     anchor = prompt_text_box.midbottom
     anchor = (anchor[0], anchor[1]+20)
@@ -82,7 +87,7 @@ def add_score(screen, clock, path, scoreboard, score):
     ready = False
     alpha = 0
 
-    #Loop to display text to the screen
+    ######### Loop to display text to the screen #####################################################
     while RUN_PROMPT:
         screen.fill("purple")
         screen.blit(background, (0,0))
@@ -109,7 +114,7 @@ def add_score(screen, clock, path, scoreboard, score):
                 anchor = prompt_text_box.midbottom
                 anchor = (anchor[0], anchor[1]+20)
                 confirm_text_box.midtop = anchor
-                confirm_text = font.render("Are These Initials Okay? " + aok_prompt, False, WHITE)
+                confirm_text = font.render("Are These Initials Okay?" + aok_prompt, False, WHITE)
                 screen.blit(confirm_text, confirm_text_box)
         screen.blit(congrats_text, congrats_text_box)
         screen.blit(prompt_text, prompt_text_box)
@@ -140,7 +145,9 @@ def add_score(screen, clock, path, scoreboard, score):
                         else:
                             characters_i = (characters_i+1) % characters_len
                     if event.key == pygame.K_BACKSPACE:
-                        initials = initials[:-2]
+                        if num_initials > 0:
+                            initials = initials[:-2]
+                            num_initials -= 1
                     if event.key == pygame.K_RETURN:
                         if AOK:
                             if aok[aok_i] == "Yes":
@@ -187,7 +194,7 @@ def add_score(screen, clock, path, scoreboard, score):
         pygame.display.update()
         frames += 1
         clock.tick(30)
-    ### End of Loop 
+    ######### End of Loop ############################################################################## 
  
     #Update the scoreboard
     scoreboard += [[initials, score]]
@@ -211,7 +218,12 @@ def add_score(screen, clock, path, scoreboard, score):
 #		QUIT: a boolean that indicates if the player decided to quit while on this state. 
 ############################################################################################################
 def display_high_scores(screen, clock, new_score, difficulty):
-    
+    ############################################################################################################
+    #A function to control the resizing logic should the player resize the window. Resizes all elements that 
+    #appear on the screen according to ratios that have already been calculated.
+    #	inputs:
+    #	outputs:
+    ############################################################################################################
     def resize_high_scores():
         nonlocal divs, cent, font, title_font, background, highscore_text_box, texts
         divs = screen.get_height()/7
@@ -329,6 +341,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
     for text in texts:
         text[0].set_alpha(alpha)
 
+    ######## Start of game loop #################################################################################
     while RUN_HIGHSCORE and not QUIT:
         screen.fill("purple")
         screen.blit(background, (0,0))
@@ -375,7 +388,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
             RUN_HIGHSCORE = False
         pygame.display.update()
         clock.tick(30)
-    ### End of Highscore display loop
+    ########## End of Highscore display loop ######################################################################
     return QUIT
 
 #################################################################################################
@@ -393,6 +406,6 @@ if __name__ == "__main__":
     scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clk = pygame.time.Clock()
     
-    display_high_scores(scrn, clk, 100, "Normal")
+    display_high_scores(scrn, clk, 1000, "Normal")
     pygame.display.quit()
     

@@ -3,8 +3,8 @@
 ## y coordinates as well as their cooresponding x coordinate
 #####################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Status: Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Status: Effects for high scores updated, idle behavior implemented
 #####################################################
 
 from random import randint, getrandbits
@@ -128,7 +128,10 @@ class Points:
         self.top = top
         self.bottom = bottom
 
-
+#################################################################################################
+# Running this file as a script: If running this file as a script, it will test the function with 
+#                                test values. Feel free to tweak and test from here. 
+#################################################################################################
 if __name__ == "__main__":
     TOP = 100
     BOTTOM = 500

@@ -2,8 +2,8 @@
 ## Reset_High_Scores.py: Initializes and resets high score tables
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Status: Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Status: Effects for high scores updated, idle behavior implemented
 ########################################################
 
 import json
@@ -28,6 +28,10 @@ def reset_high_scores():
     for _, path in high_score_tables.items():
         with open(path, "w") as outfile:
             outfile.write(json_highscores)
-    
+
+#################################################################################################
+# Running this file as a script: This will reset the high scores. This may be desirable but be 
+#                                be careful. 
+#################################################################################################
 if __name__ == "__main__":
     reset_high_scores()

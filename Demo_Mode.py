@@ -1,12 +1,30 @@
+########################################################
+## Demo_Mode.py: Functions for detecting collision in game
+########################################################
+## Author: Paul Anderson
+## Version: 1.2.0
+## Status: Alpha Complete, Screen Scaling Added.
+########################################################
+
 import pygame
 import screeninfo
 import cv2
 
+############################################################################################################
+#This function simply plays a video clip to the screen. 
+#	inputs:
+#		screen: the screen object we are displaying the video on
+#       clock: the clock object so the screen can update
+#       WIDTH: the width of the screen so the video can be scaled properly. also used for resizing
+#       HEIGHT: the height of the screen so the video can be scaled properly. also used for resizing
+#	outputs:
+#		AWAKE: a boolean value indicating if the player pressed a key or mousebutton to wake the game up
+#       QUIT: a boolean value indicating if the player gave the command to close the game
+############################################################################################################
 def demo_mode(screen, clock, WIDTH, HEIGHT):
     video = cv2.VideoCapture("./img/demo.mp4")
     success, video_image = video.read()
     fps = video.get(cv2.CAP_PROP_FPS)
-    # window = pygame.display.set_mode(video_image.shape[1::-1])
 
     QUIT = False
     AWAKE = False

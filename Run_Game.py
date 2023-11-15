@@ -2,8 +2,8 @@
 ## Run_Game.py: Runs the game loop
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Status: Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Status: Effects for high scores updated, idle behavior implemented
 ########################################################
 
 import pygame
@@ -53,9 +53,9 @@ def run_game(screen, clock, difficulty):
     #   Initialization of variables for running game. all adjustments to the numbers of the game 
     #   should be made in this section.
     ################################################################################################
-    levels = {"Easy": [0.25, 0.5, 0.1, 0.175, 0.015], #GAP_MIN, GAP_MAX, DISTANCE_MIN, DISTANCE_MAX, MULTILIER_GROWTH_RATE
-              "Normal": [0.2, 0.5, 0.1, 0.2, 0.025],
-              "Hard": [0.2, 0.4, 0.1, 0.225, 0.035]}
+    levels = {"Easy": [0.25, 0.55, 0.075, 0.175, 0.0175], #GAP_MIN, GAP_MAX, DISTANCE_MIN, DISTANCE_MAX, MULTILIER_GROWTH_RATE
+              "Normal": [0.25, 0.5, 0.1, 0.175, 0.025],
+              "Hard": [0.25, 0.45, 0.1, 0.2, 0.0325]}
     
     PLAYER_SPEED = screen.get_height() / 75    #How Quickly the Player can move up and down
     OBJECT_SPEED = screen.get_width() / 65     #How Quickly the Background Scrolls and how fast obstacles move

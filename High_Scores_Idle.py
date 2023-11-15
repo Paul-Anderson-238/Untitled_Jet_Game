@@ -2,8 +2,8 @@
 ## Display_High_Scores.py: Controls the High Score game state
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.1.0
-## Alpha Complete, Screen Scaling Added.
+## Version: 1.2.0
+## Effects for high scores updated, idle behavior implemented
 ########################################################
 
 import json
@@ -18,6 +18,12 @@ import pygame
 #       AWAKE: a boolean that lets calling function know if player input awoke the program.
 ############################################################################################################
 def high_scores_idle(screen, clock):  
+    ############################################################################################################
+    #A function to control the resizing logic should the player resize the window. Resizes all elements that 
+    #appear on the screen according to ratios that have already been calculated.
+    #	inputs:
+    #	outputs:
+    ############################################################################################################
     def resize_high_scores():
         nonlocal y_divs, x_divs, font, title_font, background, highscore_text_box, texts, highscores
         y_divs = screen.get_height()/8
