@@ -22,11 +22,7 @@ Possible Improvements:
 	better if the sprite was custom created for the game. Then it could
 	be a modern AF jet like the F-35. Collision could also be adjusted
 	to be smoother too. 
- *  File interactions could be made more airtight. There are no checks
-	to ensure files exist at this time. It could be nice to generate 
-	said files if the file doesn't exist. A number of filler scores fill
-	the scoreboard if there's nothing in it. This could be scrapped. If
-	this is done, all scores are added until we have enough scores to 
-	fill the scoreboard, at this time, top 5.
+ *  Checks were recently added to ensure files exist. This could be tested 
+	and checked more than it currently is. 
  *  Currently, there are no Sound Effects at all. There is plenty of
 	room for Sound Effects to be added.

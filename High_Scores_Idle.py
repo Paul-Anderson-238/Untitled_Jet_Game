@@ -8,6 +8,8 @@
 
 import json
 import pygame
+from os.path import exists
+from Reset_High_Scores import create_score_file
 ############################################################################################################
 #The function called from main to display the high scores
 #	inputs:
@@ -98,7 +100,10 @@ def high_scores_idle(screen, clock):
     highscores = []
 
     for key in high_score_tables.keys():
-        with open(high_score_tables[key], "r") as openfile:
+        path = high_score_tables[key]
+        if not exists(path):
+            create_score_file(path)
+        with open(path, "r") as openfile:
             highscore = json.load(openfile)
         highscores.append((key, highscore))
 

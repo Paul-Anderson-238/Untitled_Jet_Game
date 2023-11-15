@@ -1,4 +1,4 @@
 /__pycache__/
 /.vscode/
-/high_scores/
+/high_scores/*.json
 /test.py

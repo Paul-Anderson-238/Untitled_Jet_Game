@@ -8,6 +8,8 @@
 
 import json
 import pygame
+from os.path import exists
+from Reset_High_Scores import create_score_file
 ################################################################################################################
 #A helper function that will update the scoreboard both in the storage json file and locally
 #	inputs:
@@ -202,6 +204,8 @@ def add_score(screen, clock, path, scoreboard, score):
     del(scoreboard[len(scoreboard)-1])
     
     #Update the Scoreboard in Storage
+    if not exists(path):
+        create_score_file(path)
     json_highscores = json.dumps(scoreboard, indent=4)
     with open(path, "w") as outfile:
         outfile.write(json_highscores)
@@ -253,8 +257,13 @@ def display_high_scores(screen, clock, new_score, difficulty):
     high_score_tables = {"Easy": "./high_scores/Easy_high_scores.json",
                          "Normal": "./high_scores/Normal_high_scores.json",
                          "Hard": "./high_scores/Hard_high_scores.json"} 
-    
-    with open(high_score_tables[difficulty], "r") as openfile:
+        
+    path = high_score_tables[difficulty]
+    ### Sanity check to make sure we are accessing a real file    
+    if not exists(path):
+        create_score_file(path)
+
+    with open(path, "r") as openfile:
         highscores = json.load(openfile)
     
     #Find the minimum score in the high scores, then test to see if current score makes the cut 
@@ -273,7 +282,7 @@ def display_high_scores(screen, clock, new_score, difficulty):
     highscore_name = ""
     #Did the new score make the cut to be put in the highscore table?
     if highscores[min_i][1] < new_score:
-        QUIT, highscores, highscore_name = add_score(screen, clock, high_score_tables[difficulty], highscores, new_score)
+        QUIT, highscores, highscore_name = add_score(screen, clock, path, highscores, new_score)
         NEW_HIGHSCORE = True
     
     #Prep the background image
