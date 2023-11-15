@@ -9,7 +9,9 @@
 import pygame
 import screeninfo
 import cv2
-
+from os import listdir
+from os.path import isfile, join
+from random import choice
 ############################################################################################################
 #This function simply plays a video clip to the screen. 
 #	inputs:
@@ -22,7 +24,10 @@ import cv2
 #       QUIT: a boolean value indicating if the player gave the command to close the game
 ############################################################################################################
 def demo_mode(screen, clock, WIDTH, HEIGHT):
-    video = cv2.VideoCapture("./img/demo.mp4")
+    video_file_file = "img/idle_videos/"
+    paths = [f for f in listdir(video_file_file) if isfile(join(video_file_file, f))]
+
+    video = cv2.VideoCapture(video_file_file + choice(paths))
     success, video_image = video.read()
     fps = video.get(cv2.CAP_PROP_FPS)
 
@@ -53,6 +58,14 @@ def demo_mode(screen, clock, WIDTH, HEIGHT):
         screen.blit(video_surf, (0,0))
         clock.tick(fps)
         pygame.display.update()
+
+    
+    ##### Delay 2 seconds before returning ###################################################################
+    target = fps * 2
+    counter = 0
+    while counter < target:
+        clock.tick(fps)
+        counter+=1
 
     return AWAKE, QUIT
 
