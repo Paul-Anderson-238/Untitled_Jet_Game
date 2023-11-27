@@ -172,8 +172,7 @@ def run_game(screen, clock, difficulty):
     text_box.bottom = BORDER_HEIGHT
 
     ################################################################################################
-    #   Game Loop and Logic 
-    #  
+    #   Game Loop and Logic
     ################################################################################################
     #the background image loops, this tracks where we're at
     background_x = 0
