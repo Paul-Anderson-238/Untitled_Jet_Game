@@ -9,6 +9,7 @@
 import pygame
 import Points
 from Collision import collide_rect_polygon
+import pathlib
 ####################################################################################################
 #Controls the normal operation of the game. There are 2 main divisions in this function:the init of  
 #variables and objects, and the game loop and logic.
@@ -20,19 +21,21 @@ from Collision import collide_rect_polygon
 #		QUIT: a boolean flag that lets the calling function know if the player opted to quit the game.
 #		score: the score the player got to this round. In the case of the player quitting, returns 0.
 ####################################################################################################
-def run_game(screen, clock, difficulty):
+def run_game(screen, clock, difficulty, SPRITE):
     
     def resize_game():
-        nonlocal width, height, screen, PLAYER_SPEED, OBJECT_SPEED, BORDER_HEIGHT, Y_UPPER_LIMIT, Y_LOWER_LIMIT
-        nonlocal BACKGROUND_WIDTH, background, player, font, text, text_box, PLAYER_Y
-        PLAYER_SPEED = screen.get_height() / 75
-        OBJECT_SPEED = screen.get_width() / 65
+        nonlocal width, height, screen, BASE_PLAYER_SPEED, PLAYER_SPEED, BASE_OBJECT_SPEED, OBJECT_SPEED, SPEED_MULTIPLIER, BORDER_HEIGHT
+        nonlocal Y_UPPER_LIMIT, Y_LOWER_LIMIT, BACKGROUND_WIDTH, background, player, font, text, text_box, PLAYER_Y
+        BASE_PLAYER_SPEED = screen.get_height() / 75
+        PLAYER_SPEED = int(BASE_PLAYER_SPEED * SPEED_MULTIPLIER)
+        BASE_OBJECT_SPEED = screen.get_width() / 195
+        OBJECT_SPEED = int(BASE_OBJECT_SPEED * 3 * SPEED_MULTIPLIER)
         BORDER_HEIGHT = int(screen.get_height() / 20)
         Y_UPPER_LIMIT = BORDER_HEIGHT
         Y_LOWER_LIMIT = screen.get_height()-BORDER_HEIGHT
         BACKGROUND_WIDTH = screen.get_width()
         background = pygame.transform.smoothscale(background, screen.get_size())
-        
+       
         x_scale = screen.get_width()/width
         y_scale = screen.get_height()/height
         width = screen.get_width()
@@ -48,7 +51,6 @@ def run_game(screen, clock, difficulty):
         text_box.right = screen.get_width()
         text_box.bottom = BORDER_HEIGHT
         PLAYER_Y = int(PLAYER_Y * y_scale)
-
     ################################################################################################
     #   Initialization of variables for running game. all adjustments to the numbers of the game 
     #   should be made in this section.
@@ -57,8 +59,10 @@ def run_game(screen, clock, difficulty):
               "Normal": [0.25, 0.5, 0.1, 0.175, 0.025],
               "Hard": [0.25, 0.45, 0.1, 0.2, 0.0325]}
     
-    PLAYER_SPEED = screen.get_height() / 75    #How Quickly the Player can move up and down
-    OBJECT_SPEED = screen.get_width() / 65     #How Quickly the Background Scrolls and how fast obstacles move
+    BASE_PLAYER_SPEED = screen.get_height() / 75    #How Quickly the Player can move up and down
+    PLAYER_SPEED = BASE_PLAYER_SPEED
+    BASE_OBJECT_SPEED = screen.get_width() / 195      #How Quickly the Background Scrolls and how fast obstacles move
+    OBJECT_SPEED = BASE_OBJECT_SPEED * 3
     SPEED_MULTIPLIER = 1.0                     #A Scaling Multiplier to make the game more difficult as it goes.
     
     width = screen.get_width()
@@ -68,7 +72,7 @@ def run_game(screen, clock, difficulty):
     BORDER_HEIGHT = int(screen.get_height() / 20)   #Width of the upper and lower border edges
     PLAYER_X = 25
     PLAYER_Y = screen.get_height() / 2         #Player starting Y
-    PLAYER_RATIO = 12                          #Ratio of player Height to screen Height
+    PLAYER_RATIO = 10                          #Ratio of player Height to screen Height
     
     EXPLOSION_RATIO = 8
     
@@ -131,8 +135,8 @@ def run_game(screen, clock, difficulty):
         def get_collide_rectangle(self):
             return self.collide_rectangle
         def resize(self, x_scale, y_scale):
-            nonlocal PLAYER_RATIO
-            player_sprite = pygame.image.load("./img/pixel_fighter.png").convert_alpha()
+            nonlocal PLAYER_RATIO, SPRITE
+            player_sprite = pygame.image.load(SPRITE).convert_alpha()
             scale = screen.get_height() / (PLAYER_RATIO * player_sprite.get_height())
             player_sprite = pygame.transform.rotozoom(player_sprite, 0, scale)
             self.img = player_sprite
@@ -147,7 +151,7 @@ def run_game(screen, clock, difficulty):
             self.collide_rectangle.center = self.rectangle.center
     
     #initialize the Player Sprite
-    player_sprite = pygame.image.load("./img/pixel_fighter.png").convert_alpha()
+    player_sprite = pygame.image.load(SPRITE).convert_alpha()   
     
     #generates a percentage to scale the player image based on a ratio to screen size
     scale = screen.get_height() / (PLAYER_RATIO * player_sprite.get_height())
@@ -177,15 +181,14 @@ def run_game(screen, clock, difficulty):
     #the background image loops, this tracks where we're at
     background_x = 0
     while running:
-        screen.fill("purple") #Used to wipe away anything drawn last loop, making visuals smoother
+        #screen.fill("purple") #Used to wipe away anything drawn last loop, making visuals smoother
         
         #Scroll the Background
-        background_x -= int(OBJECT_SPEED * SPEED_MULTIPLIER)
+        background_x -= int(BASE_OBJECT_SPEED)
         if background_x <= -BACKGROUND_WIDTH:
             background_x = 0
         
         #logic to keep the background scrolling
-        screen.blit(background, (background_x - BACKGROUND_WIDTH, 0))
         screen.blit(background, (background_x, 0))
         screen.blit(background, (background_x + BACKGROUND_WIDTH, 0))
     
@@ -207,18 +210,18 @@ def run_game(screen, clock, difficulty):
         if moving_down and moving_up:
             moving_up = moving_down = False
         elif moving_down:
-            PLAYER_Y += int(PLAYER_SPEED * SPEED_MULTIPLIER)
-            player_movement = int(PLAYER_SPEED * SPEED_MULTIPLIER)
+            PLAYER_Y += PLAYER_SPEED
+            player_movement = PLAYER_SPEED
             if PLAYER_Y > Y_LOWER_LIMIT:
-                player_movement = int(PLAYER_SPEED * SPEED_MULTIPLIER) - (PLAYER_Y-Y_LOWER_LIMIT)
+                player_movement = PLAYER_SPEED - (PLAYER_Y-Y_LOWER_LIMIT)
                 PLAYER_Y = Y_LOWER_LIMIT
             player.move(player_movement)
         
         elif moving_up:
-            PLAYER_Y -= int(PLAYER_SPEED * SPEED_MULTIPLIER)
-            player_movement = -int(PLAYER_SPEED * SPEED_MULTIPLIER)
+            PLAYER_Y -= PLAYER_SPEED
+            player_movement = -PLAYER_SPEED
             if PLAYER_Y < Y_UPPER_LIMIT:
-                player_movement = -(int(PLAYER_SPEED * SPEED_MULTIPLIER) - (Y_UPPER_LIMIT - PLAYER_Y))
+                player_movement = -(PLAYER_SPEED - (Y_UPPER_LIMIT - PLAYER_Y))
                 PLAYER_Y = Y_UPPER_LIMIT
             player.move(player_movement)
         
@@ -230,16 +233,16 @@ def run_game(screen, clock, difficulty):
             else:
                 screen.blit(player.sprite_straight(), player.get_rectangle())
             
-            points.update_points(int(OBJECT_SPEED * SPEED_MULTIPLIER))
+            points.update_points(OBJECT_SPEED)
             top_points = [(0,0)] + points.get_top_points() + [(screen.get_width(), 0)]
             bottom_points = [(0, screen.get_height())] + points.get_bottom_points() + [(screen.get_width(), screen.get_height())]
             pygame.draw.polygon(screen, (0,0,0), top_points)
             pygame.draw.polygon(screen, (0,0,0), bottom_points)
             
-            text = font.render('Score: ' + str(frames*29).zfill(8), False, (255,255,255))
+            text = font.render('Score:' + str(SCORE).zfill(8), False, (255,255,255))
             screen.blit(text,text_box)
 
-            pygame.display.update()
+            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -255,7 +258,8 @@ def run_game(screen, clock, difficulty):
                 frames += 1
                 if frames % 100 == 0:
                     SPEED_MULTIPLIER += MULTIPLIER_GROWTH_RATE
-            
+                    OBJECT_SPEED = int(BASE_OBJECT_SPEED * 3 * SPEED_MULTIPLIER)
+                    PLAYER_SPEED = int(BASE_PLAYER_SPEED * SPEED_MULTIPLIER)
             clock.tick(FPS)
     ### END OF GAME LOOP ########################################################################################
     
@@ -291,7 +295,6 @@ def run_game(screen, clock, difficulty):
         screen.fill("purple") 
         
         #background stays where it's at
-        screen.blit(background, (background_x - BACKGROUND_WIDTH, 0))
         screen.blit(background, (background_x, 0))
         screen.blit(background, (background_x + BACKGROUND_WIDTH, 0))
         
@@ -327,16 +330,25 @@ def run_game(screen, clock, difficulty):
 #####################################################################################################################
 import screeninfo
 if __name__ == "__main__":
+    from random import choice
+    
     for m in screeninfo.get_monitors():
         if m.is_primary:
             monitor = m
     
-    WIDTH = int(monitor.width * 0.8)
-    HEIGHT = int(monitor.height * 0.8)
+    WIDTH = int(monitor.width * 0.5)
+    HEIGHT = int(monitor.height * 0.5)
     INITIAL_SIZE = (WIDTH,HEIGHT) #Initial Screen size
+    FLAGS = pygame.DOUBLEBUF | pygame.RESIZABLE
 
-    scrn = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
+    scrn = pygame.display.set_mode(INITIAL_SIZE, FLAGS, 8)
     clk = pygame.time.Clock()
-    run_game(scrn, clk, "Easy")
+    
+    pygame.event.set_allowed([pygame.QUIT, pygame.WINDOWRESIZED])
+    
+    sprites_path = pathlib.Path("./img/sprites")
+    SPRITES = [path for path in sprites_path.iterdir() if path.is_file()]
+    
+    run_game(scrn, clk, "Hard", choice(SPRITES))
     pygame.display.quit()
   

@@ -7,9 +7,8 @@ Possible Improvements:
  *  There are a few explosion frames for an explosion in
 	the game loop. Better/more frames could be added to make the 
 	explosion smoother.
- *  Additional Difficulty levels can be added/adjusted.
- *  Related to the above point difficulty levels/filepaths can be 
-	exported to an external source. Currently, if you were to add another
+ *  levels/filepaths can be exported to an external source. 
+	Currently, if you were to add another
 	difficulty level, changes would need to be made in almost all files.
 	If the definitions were moved to an external source, it would be 
 	trivial to add more difficulty features.
@@ -21,8 +20,6 @@ Possible Improvements:
  *  Player sprite found from free imgs on the internet. It would work 
 	better if the sprite was custom created for the game. Then it could
 	be a modern AF jet like the F-35. Collision could also be adjusted
-	to be smoother too. 
- *  Checks were recently added to ensure files exist. This could be tested 
-	and checked more than it currently is. 
+	to be smoother too.
  *  Currently, there are no Sound Effects at all. There is plenty of
 	room for Sound Effects to be added.

@@ -3,8 +3,8 @@
 ## y coordinates as well as their cooresponding x coordinate
 #####################################################
 ## Author: Paul Anderson
-## Version: 1.2.0
-## Status: Effects for high scores updated, idle behavior implemented
+## Version: 2.0.0
+## Status: Added constructor logic so the constructor can be used by new demo mode.
 #####################################################
 
 from random import randint, getrandbits
@@ -54,16 +54,23 @@ class Point:
 ## all individual points    
 ######################################################
 class Points:
-    def __init__(self, screen_width, screen_height, top, bottom, gap_min, gap_max, distance_min, distance_max):
+    def __init__(self, screen_width, screen_height, top, bottom, gap_min, gap_max, distance_min, distance_max, demo=False):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.y_points = [Point(i*(screen_width/8), top, bottom) for i in range((math.ceil(screen_width/(screen_width/8)) * 2))]
         self.top = top
         self.bottom = bottom
         self.gap_min = gap_min
         self.gap_max = gap_max
         self.distance_min = distance_min
         self.distance_max = distance_max
+        if demo:
+            self.y_points = [Point(i * (screen_width/8), top, bottom) for i in range(2)]
+
+            while self.y_points[len(self.y_points)-1].get_x() < self.screen_width:
+                self.add_point(self.y_points[len(self.y_points)-1])
+        else:
+            self.y_points = [Point(i*(screen_width/8), top, bottom) for i in range((math.ceil(screen_width/(screen_width/8)) * 2))]
+        
     
     def update_points(self, speed):
         for point in self.y_points:
@@ -134,18 +141,20 @@ class Points:
 #################################################################################################
 if __name__ == "__main__":
     TOP = 100
-    BOTTOM = 500
+    BOTTOM = 980
     min_distance = 0.1
-    max_distance = 0.3
-    GAP_MIN = 75
-    GAP_MAX = 150
+    max_distance = 0.175
+    GAP_MIN = 0.25
+    GAP_MAX = 0.50
     test_point = (200, 300)
     
-    points = Points(1200, 900, TOP, BOTTOM, GAP_MIN, GAP_MAX, min_distance, max_distance)
+    points = Points(1920, 1080, TOP, BOTTOM, GAP_MIN, GAP_MAX, min_distance, max_distance)
     print(points.get_top_points())
     print(points.get_bottom_points())
 
-    for _ in range(50):
+    for _ in range(500):
         points.update_points(50)
         print(points.get_top_points())
+    points = Points(1200, 900, TOP, BOTTOM, GAP_MIN, GAP_MAX, min_distance, max_distance, True)
+    print(points.get_top_points())
  

@@ -13,15 +13,16 @@
 ## any of this code, have fun. :)
 ########################################################
 from Menu import menu
-import screeninfo
+from screeninfo import get_monitors
 import pygame
 
 if __name__ == "__main__":
-    for m in screeninfo.get_monitors():
+    for m in get_monitors():
         if m.is_primary:
             monitor = m
-    INITIAL_SIZE = (int(monitor.width), int(monitor.height)) #Initial Screen size
+    INITIAL_SIZE = (int(monitor.width/2), int(monitor.height/2)) #Initial Screen size
     screen = pygame.display.set_mode(INITIAL_SIZE, pygame.RESIZABLE)
     clock = pygame.time.Clock()
     pygame.display.set_caption("Untitled Jet Game")
+    pygame.event.set_allowed([pygame.QUIT, pygame.WINDOWRESIZED, pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN])
     menu(screen, clock)

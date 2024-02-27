@@ -150,7 +150,7 @@ def add_score(screen, clock, path, scoreboard, score):
                         if num_initials > 0:
                             initials = initials[:-2]
                             num_initials -= 1
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                         if AOK:
                             if aok[aok_i] == "Yes":
                                 RUN_PROMPT = False
