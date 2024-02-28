@@ -22,7 +22,7 @@ import re
 def sprite_select(screen, clock):
     def resize_game():
         nonlocal width, height, screen, BORDER_HEIGHT, title_font, sprite_font, title_text, title_text_box
-        nonlocal Y_UPPER_LIMIT, Y_LOWER_LIMIT, BACKGROUND_WIDTH, background, PLAYER_Y, sprite_text, sprite_text_box
+        nonlocal Y_UPPER_LIMIT, Y_LOWER_LIMIT, BACKGROUND_WIDTH, background, sprite_text, sprite_text_box
         BORDER_HEIGHT = int(screen.get_height() / 20)
         Y_UPPER_LIMIT = BORDER_HEIGHT
         Y_LOWER_LIMIT = screen.get_height()-BORDER_HEIGHT
@@ -35,7 +35,6 @@ def sprite_select(screen, clock):
         width = screen.get_width()
         height = screen.get_height()
 
-        PLAYER_Y = int(PLAYER_Y * y_scale)
         title_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/12))
         sprite_font = pygame.font.SysFont(pygame.font.get_default_font(), int(screen.get_height()/20))
         
@@ -63,9 +62,7 @@ def sprite_select(screen, clock):
 
     FPS = 30                                   #Only works when this is fairly low on raspberry pi
     BORDER_HEIGHT = int(screen.get_height() / 20)   #Width of the upper and lower border edges
-    PLAYER_X = 25
-    PLAYER_Y = screen.get_height() / 2         #Player starting Y
-    PLAYER_RATIO = 6                           #Ratio of player Height to screen Height
+    PLAYER_RATIO = 8                           #Ratio of player Height to screen Height
     #Y_UPPER_LIMIT and Y_LOWER_LIMIT define the absolute boundaries that the player can fly to on
     #the y axis
     Y_UPPER_LIMIT = BORDER_HEIGHT
@@ -97,8 +94,7 @@ def sprite_select(screen, clock):
     player_sprite = pygame.image.load(SPRITES[sprite_i])
     scale = screen.get_height() / (PLAYER_RATIO * player_sprite.get_height())
     player_sprite = pygame.transform.rotozoom(player_sprite, 0, scale)
-
-    sprite_rect = pygame.Rect(PLAYER_X, PLAYER_Y, player_sprite.get_width(), player_sprite.get_height())
+    sprite_rect = pygame.Rect(0, 0, player_sprite.get_width(), player_sprite.get_height())
 
     #Logic for running the game loop
     running = True
@@ -147,8 +143,13 @@ def sprite_select(screen, clock):
                 if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     sprite_i = (sprite_i+1) % len(SPRITES)
                     player_sprite = pygame.image.load(SPRITES[sprite_i])
+                    scale = screen.get_height() / (PLAYER_RATIO * player_sprite.get_height())
                     player_sprite = pygame.transform.rotozoom(player_sprite, 0, scale)
+                    sprite_rect = pygame.Rect(0, 0, player_sprite.get_width(), player_sprite.get_height())
+                    sprite_rect.midtop = title_text_box.midbottom
                     sprite_text = sprite_font.render(find_sprite_name(), False, ORANGE)
+                    sprite_text_box = sprite_text.get_rect()
+                    sprite_text_box.midtop = sprite_rect.midbottom
                     
                     screen.fill("purple")
                     screen.blit(background, (0, 0))
@@ -158,8 +159,13 @@ def sprite_select(screen, clock):
                 if event.key == pygame.K_w or event.key == pygame.K_UP:
                     sprite_i = (sprite_i-1) % len(SPRITES)
                     player_sprite = pygame.image.load(SPRITES[sprite_i])
+                    scale = screen.get_height() / (PLAYER_RATIO * player_sprite.get_height())
                     player_sprite = pygame.transform.rotozoom(player_sprite, 0, scale)
+                    sprite_rect = pygame.Rect(0, 0, player_sprite.get_width(), player_sprite.get_height())
+                    sprite_rect.midtop = title_text_box.midbottom
                     sprite_text = sprite_font.render(find_sprite_name(), False, ORANGE)
+                    sprite_text_box = sprite_text.get_rect()
+                    sprite_text_box.midtop = sprite_rect.midbottom
                     
                     screen.fill("purple")
                     screen.blit(background, (0, 0))

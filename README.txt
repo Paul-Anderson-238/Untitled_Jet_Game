@@ -17,9 +17,9 @@ Possible Improvements:
 	that only bottom points were added to create dunes and mesas. 
 	Additionally, I would add flying obstacles. It would be a bit of 
 	work but doable and definitely cool. Do what you think is coolest.
- *  Player sprite found from free imgs on the internet. It would work 
-	better if the sprite was custom created for the game. Then it could
-	be a modern AF jet like the F-35. Collision could also be adjusted
-	to be smoother too.
  *  Currently, there are no Sound Effects at all. There is plenty of
 	room for Sound Effects to be added.
+*	Code base could adjusted to more strictly adhere to state machine 
+	design. It is somewhat okay as is but the menu should be its own
+	state. In the current design the menu is it's own state and the 
+	state machine. 
