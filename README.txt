@@ -19,7 +19,7 @@ Possible Improvements:
 	work but doable and definitely cool. Do what you think is coolest.
  *  Currently, there are no Sound Effects at all. There is plenty of
 	room for Sound Effects to be added.
-*	Code base could adjusted to more strictly adhere to state machine 
+ *  Code base could adjusted to more strictly adhere to state machine 
 	design. It is somewhat okay as is but the menu should be its own
 	state. In the current design the menu is it's own state and the 
 	state machine. 
