@@ -2,8 +2,8 @@
 ## Main.py: Launch Point of the Program
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.2.0
-## Status: Effects for high scores updated, idle behavior implemented
+## Version: 2.0.0
+## Status: Various changes to sprite selection
 ########################################################
 ## This program was created for STEM outreach of Hill AFB
 ## There is no copyright on any of the code. As primary

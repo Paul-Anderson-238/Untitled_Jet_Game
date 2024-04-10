@@ -3,7 +3,7 @@
 ########################################################
 ## Author: Paul Anderson
 ## Version: 1.2.0
-## Effects for high scores updated, idle behavior implemented
+## Logic mostly unchanged but slight edits to data passed around. 
 ########################################################
 
 import json

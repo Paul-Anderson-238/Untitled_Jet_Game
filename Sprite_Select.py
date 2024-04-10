@@ -3,7 +3,7 @@
 ########################################################
 ## Author: Paul Anderson
 ## Version: 2.0.0
-## Status: Modified Run_Game to conrol it's own movement logic as a demo during idle time.
+## Status: Now collects all sprites from sprite folder automatically.
 ########################################################
 
 import pygame

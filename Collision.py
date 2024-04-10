@@ -2,8 +2,8 @@
 ## Collision.py: Functions for detecting collision in game
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.2.0
-## Status: Effects for high scores updated, idle behavior implemented
+## Version: 2.0.0
+## Status: No major changes to collision detection. Adjustments in other Areas
 ########################################################
 
 import pygame

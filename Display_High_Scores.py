@@ -2,8 +2,8 @@
 ## Display_High_Scores.py: Controls the High Score game state
 ########################################################
 ## Author: Paul Anderson
-## Version: 1.2.0
-## Effects for high scores updated, idle behavior implemented
+## Version: 2.0.0
+## Mostly unchanged. various changes to other areas of code. 
 ########################################################
 
 import json
